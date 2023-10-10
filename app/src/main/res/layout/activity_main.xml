@@ -62,38 +62,128 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.tabs.TabLayout
+<!--    <com.google.android.material.tabs.TabLayout-->
+<!--        android:id="@+id/selectTabs"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/orange"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/dateRow"-->
+<!--        app:tabIndicatorColor="@color/white"-->
+<!--        app:tabIndicatorFullWidth="false"-->
+<!--        app:tabIndicatorHeight="4dp"-->
+<!--        app:tabTextColor="@color/white">-->
+
+<!--        <com.google.android.material.tabs.TabItem-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Daily" />-->
+
+<!--        <com.google.android.material.tabs.TabItem-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Monthly" />-->
+
+<!--        <com.google.android.material.tabs.TabItem-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Calander" />-->
+
+<!--        <com.google.android.material.tabs.TabItem-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Summary" />-->
+
+<!--    </com.google.android.material.tabs.TabLayout>-->
+
+        <TextView
+            android:id="@+id/selectTabs"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/orange"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateRow"></TextView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/orange"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginVertical="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateRow"
-        app:tabIndicatorColor="@color/white"
-        app:tabIndicatorFullWidth="false"
-        app:tabIndicatorHeight="4dp"
-        app:tabTextColor="@color/white">
+        app:layout_constraintTop_toBottomOf="@+id/selectTabs">
 
-        <com.google.android.material.tabs.TabItem
+        <TextView
+            android:id="@+id/income"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Daily" />
+            android:text="Income"
+            android:textSize="17sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></TextView>
 
-        <com.google.android.material.tabs.TabItem
+        <TextView
+            android:id="@+id/incomeValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Monthly" />
+            android:layout_marginTop="3dp"
+            android:text="200"
+            android:textColor="@color/green"
+            android:textSize="17sp"
+            app:layout_constraintEnd_toEndOf="@+id/income"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/income"></TextView>
 
-        <com.google.android.material.tabs.TabItem
+        <TextView
+            android:id="@+id/expense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calander" />
+            android:text="Expense"
+            android:textSize="17sp"
+            app:layout_constraintEnd_toStartOf="@+id/total"
+            app:layout_constraintStart_toEndOf="@+id/income"
+            app:layout_constraintTop_toTopOf="parent"></TextView>
 
-        <com.google.android.material.tabs.TabItem
+        <TextView
+            android:id="@+id/expenseValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Summary" />
+            android:layout_marginTop="3dp"
+            android:text="200"
+            android:textColor="@color/red"
+            android:textSize="17sp"
+            app:layout_constraintEnd_toStartOf="@+id/total"
+            app:layout_constraintStart_toEndOf="@+id/income"
+            app:layout_constraintTop_toBottomOf="@id/expense"></TextView>
 
-    </com.google.android.material.tabs.TabLayout>
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total"
+            android:textSize="17sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></TextView>
+
+        <TextView
+            android:id="@+id/totalValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="400"
+            android:textSize="17sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/total"
+            app:layout_constraintTop_toBottomOf="@+id/total"></TextView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/orange"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
