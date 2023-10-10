@@ -20,11 +20,14 @@
     </style>
 
     <style name="CurvedSquareShape">
-<!--        <item name="cornerFamily">cut</item>-->
         <item name="cornerSize">16dp</item> <!-- Adjust the corner radius as needed -->
     </style>
 
 
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">25sp</item>
+        <item name="android:tint">@color/white</item>
+    </style>
 
 
 </resources>
