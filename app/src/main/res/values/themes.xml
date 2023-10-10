@@ -13,4 +13,18 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="App.CustomIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/grey</item>
+        <item name="android:titleMarginBottom">200dp</item>
+    </style>
+
+    <style name="CurvedSquareShape">
+<!--        <item name="cornerFamily">cut</item>-->
+        <item name="cornerSize">16dp</item> <!-- Adjust the corner radius as needed -->
+    </style>
+
+
+
+
 </resources>

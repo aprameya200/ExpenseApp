@@ -7,6 +7,10 @@ android {
     namespace 'com.example.expenseapp'
     compileSdk 33
 
+    buildFeatures{
+        viewBinding true
+    }
+
     defaultConfig {
         applicationId "com.example.expenseapp"
         minSdk 26
