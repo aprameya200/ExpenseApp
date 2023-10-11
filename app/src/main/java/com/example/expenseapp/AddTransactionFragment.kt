@@ -13,11 +13,13 @@ import com.example.expenseapp.databinding.BottomDialogBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.Calendar
 import androidx.fragment.app.FragmentManager
+import com.example.expenseapp.databinding.CategoryFragmentBinding
 
 
 class AddTransactionFragment : BottomSheetDialogFragment() {
 
     lateinit var binding: BottomDialogBinding
+    lateinit var categoryBinding: CategoryFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,6 +27,11 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = BottomDialogBinding.inflate(layoutInflater)
+        categoryBinding = CategoryFragmentBinding.inflate(layoutInflater)
+
+        var incomeButton = binding.incomeToggle
+        var expenseButton = binding.expenseToggle
+
 
         val myCalander = Calendar.getInstance()
 
@@ -48,39 +55,58 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
                 myCalander.get(Calendar.DAY_OF_MONTH)
             ).show()
 
-
         }
 
-        binding.selectCategory.setOnClickListener{
+        binding.selectCategory.setOnClickListener {
             var cat = SelectCategoryFragment()
-            cat.show(childFragmentManager,"hi") //shows the dialog framgnet
+            cat.show(childFragmentManager, "hi") //shows the dialog framgnet
         }
 
-        binding.incomeToggle.setOnCheckedChangeListener { button, isChecked ->
-            if (isChecked) {
-                button.backgroundTintList =
-                    context?.let { ContextCompat.getColorStateList(it, R.color.grey) }
-                binding.expenseToggle.backgroundTintList =
-                    context?.let { ContextCompat.getColorStateList(it, R.color.white) }
-            } else {
-                button.backgroundTintList =
-                    context?.let { ContextCompat.getColorStateList(it, R.color.white) }
-                binding.expenseToggle.backgroundTintList =
-                    context?.let { ContextCompat.getColorStateList(it, R.color.grey) }
-            }
+
+        incomeButton.isSelected = true
+
+        incomeButton.setOnClickListener {
+            incomeButton.backgroundTintList =
+                context?.let { ContextCompat.getColorStateList(it, R.color.green) }
+            incomeButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.expenseToggle.backgroundTintList =
+                context?.let { ContextCompat.getColorStateList(it, R.color.white) }
+            expenseButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+
         }
 
-        binding.expenseToggle.setOnCheckedChangeListener { button, isChecked ->
-            if (isChecked) {
-                button.backgroundTintList =
-                    context?.let { ContextCompat.getColorStateList(it, R.color.grey) }
-                binding.incomeToggle.backgroundTintList =
-                    context?.let { ContextCompat.getColorStateList(it, R.color.white) }
-            } else {
-                button.backgroundTintList =
-                    context?.let { ContextCompat.getColorStateList(it, R.color.white) }
-                binding.incomeToggle.backgroundTintList =
-                    context?.let { ContextCompat.getColorStateList(it, R.color.grey) }
+        expenseButton.setOnClickListener {
+
+            expenseButton.backgroundTintList =
+                context?.let { ContextCompat.getColorStateList(it, R.color.red) }
+            expenseButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.incomeToggle.backgroundTintList =
+                context?.let { ContextCompat.getColorStateList(it, R.color.white) }
+            incomeButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+
+        }
+
+
+        val listOfCategories = listOf(
+            categoryBinding.cashCategory,
+            categoryBinding.businessCategory,
+            categoryBinding.investmentCategory,
+            categoryBinding.loanCategory,
+            categoryBinding.othersCategory,
+            categoryBinding.rentCategory
+        )
+
+        for (category in listOfCategories) {
+            category.setOnClickListener {
+                val categorySelection = when (category) { //this is the selected category
+                    categoryBinding.cashCategory -> "Cash"
+                    categoryBinding.businessCategory -> "Business"
+                    categoryBinding.investmentCategory -> "Investment"
+                    categoryBinding.loanCategory -> "Loan"
+                    categoryBinding.othersCategory -> "Others"
+                    categoryBinding.rentCategory -> "Rent"
+                    else -> "None"
+                }
             }
         }
 
@@ -89,8 +115,9 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateDate(myCalander : Calendar) {
+    private fun updateDate(myCalander: Calendar) {
         binding.selectDateButton.text =
             myCalander.get(Calendar.YEAR).toString() + "/" + myCalander.get(Calendar.MONTH)
-                .toString() + "/" + myCalander.get(Calendar.DAY_OF_MONTH).toString()    }
+                .toString() + "/" + myCalander.get(Calendar.DAY_OF_MONTH).toString()
+    }
 }

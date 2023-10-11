@@ -7,7 +7,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="500dp"
         android:background="@drawable/add_bottom_dialog"
         android:paddingTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,6 +29,7 @@
             android:background="@drawable/toggle_background_income"
             android:checked="false"
             android:textOff="Income"
+            android:textColor="@color/green"
             android:textOn="Income"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toTopOf="parent" />
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/toggle_background_expense"
             android:checked="false"
+            android:textColor="@color/red"
             android:textOff="Expense"
             android:textOn="Expense"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
@@ -94,6 +96,51 @@
             android:textSize="15sp"
             android:textStyle="normal"
             app:layout_constraintTop_toBottomOf="@+id/amountText"></Button>
+
+        <Button
+            android:id="@+id/accountCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="45dp"
+            android:layout_marginVertical="20dp"
+            android:height="48dp"
+            android:background="@drawable/from_component_background"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="30dp"
+            android:text="Select Account"
+            android:textAllCaps="false"
+            android:textSize="15sp"
+            android:textStyle="normal"
+            app:layout_constraintTop_toBottomOf="@+id/selectCategory"></Button>
+
+        <EditText
+            android:id="@+id/noteText"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="45dp"
+            android:layout_marginVertical="20dp"
+            android:background="@drawable/from_component_background"
+            android:gravity="center_vertical"
+            android:hint="Amount"
+            android:inputType="number"
+            android:paddingHorizontal="30dp"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="normal"
+            app:layout_constraintTop_toBottomOf="@+id/accountCategory"></EditText>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Transaction"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginVertical="20dp"
+            android:backgroundTint="@color/orange"
+            app:layout_constraintTop_toBottomOf="@+id/noteText"></Button>
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
