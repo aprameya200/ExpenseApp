@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import com.example.expenseapp.databinding.ActivityMainBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,15 +16,22 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setSupportActionBar(binding.toolBar)
         supportActionBar?.title = "Transactions"
         window.statusBarColor = getColor(R.color.orange)
 
+
+        var addTransactionSheet = AddTransactionFragment()
+
+
+        binding.addTransaction.setOnClickListener {
+            addTransactionSheet.show(supportFragmentManager,"Hi")
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.top_menu,menu)
+        menuInflater.inflate(R.menu.top_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 }
