@@ -1,19 +1,22 @@
-package com.example.expenseapp
+package com.example.expenseapp.ui.Fragments
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
+import com.example.expenseapp.AccountsAdapter
 import com.example.expenseapp.databinding.BottomDialogBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.Calendar
-import androidx.fragment.app.FragmentManager
+import com.example.expenseapp.R
 import com.example.expenseapp.databinding.CategoryFragmentBinding
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class AddTransactionFragment : BottomSheetDialogFragment() {
@@ -28,6 +31,12 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
     ): View? {
         binding = BottomDialogBinding.inflate(layoutInflater)
         categoryBinding = CategoryFragmentBinding.inflate(layoutInflater)
+
+        EventBus.builder().installDefaultEventBus()
+
+        // Post the message event to EventBus
+//        val messageEvent = MessageEvent("Hello, EventBus!")
+        EventBus.getDefault().register(this)
 
         var incomeButton = binding.incomeToggle
         var expenseButton = binding.expenseToggle
@@ -86,29 +95,14 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
 
         }
 
+        binding.accountCategory.setOnClickListener {
+            var acc = SelectAccountFragment()
+            acc.show(childFragmentManager, "a")
 
-        val listOfCategories = listOf(
-            categoryBinding.cashCategory,
-            categoryBinding.businessCategory,
-            categoryBinding.investmentCategory,
-            categoryBinding.loanCategory,
-            categoryBinding.othersCategory,
-            categoryBinding.rentCategory
-        )
-
-        for (category in listOfCategories) {
-            category.setOnClickListener {
-                val categorySelection = when (category) { //this is the selected category
-                    categoryBinding.cashCategory -> "Cash"
-                    categoryBinding.businessCategory -> "Business"
-                    categoryBinding.investmentCategory -> "Investment"
-                    categoryBinding.loanCategory -> "Loan"
-                    categoryBinding.othersCategory -> "Others"
-                    categoryBinding.rentCategory -> "Rent"
-                    else -> "None"
-                }
-            }
         }
+
+
+
 
 
         return binding.root
@@ -120,4 +114,17 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
             myCalander.get(Calendar.YEAR).toString() + "/" + myCalander.get(Calendar.MONTH)
                 .toString() + "/" + myCalander.get(Calendar.DAY_OF_MONTH).toString()
     }
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onCategorySelected(category: String) {
+        Log.d("SecondActivity", "Received message:" + category + " \"")
+        binding.selectCategory.text = category
+    }
+
+
 }

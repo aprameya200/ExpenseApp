@@ -4,8 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import com.example.expenseapp.databinding.ActivityMainBinding
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.example.expenseapp.ui.Fragments.AddTransactionFragment
 
 class MainActivity : AppCompatActivity() {
 
