@@ -14,4 +14,14 @@
     <color name="btm_card_color">#EFE3E2</color>
     <color name="grey">#B4A9A8</color>
     <color name="btn_bg">#E8E1E0</color>
+
+
+    <!--    category colors-->
+    <color name="cash_color">#03EB9A</color>
+    <color name="business_color">#FF00D4</color>
+    <color name="investment_color">#FFAA00</color>
+    <color name="loan_color">#00AFFF</color>
+    <color name="rent_color">#AD50D4</color>
+    <color name="others_color">#BD600E</color>
+
 </resources>

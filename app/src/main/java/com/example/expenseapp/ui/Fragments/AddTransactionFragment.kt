@@ -32,7 +32,7 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
         binding = BottomDialogBinding.inflate(layoutInflater)
         categoryBinding = CategoryFragmentBinding.inflate(layoutInflater)
 
-        EventBus.builder().installDefaultEventBus()
+//        EventBus.builder().installDefaultEventBus()
 
         // Post the message event to EventBus
 //        val messageEvent = MessageEvent("Hello, EventBus!")
@@ -99,7 +99,11 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
             var acc = SelectAccountFragment()
             acc.show(childFragmentManager, "a")
 
+            AccountsAdapter.accountSelection.clickData.observe(viewLifecycleOwner){
+                binding.accountCategory.text = it
+            }
         }
+
 
 
 

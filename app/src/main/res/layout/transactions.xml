@@ -48,6 +48,7 @@
         android:textSize="15sp"></TextView>
 
     <TextView
+        android:id="@+id/transactionDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="17 March, 2023"
@@ -57,6 +58,18 @@
         app:layout_constraintBottom_toBottomOf="@+id/tag"
         app:layout_constraintStart_toEndOf="@+id/tag"
         app:layout_constraintTop_toTopOf="@+id/guideline"></TextView>
+
+    <ImageView
+        android:id="@+id/typeArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_arrow_drop_up_24"
+        app:layout_constraintBottom_toBottomOf="@+id/transactionTitle"
+        app:layout_constraintTop_toTopOf="@+id/transactionTitle"
+        app:layout_constraintStart_toEndOf="@+id/transactionTitle"
+        >
+
+    </ImageView>
 
     <TextView
         android:id="@+id/amount"
