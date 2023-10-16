@@ -2,7 +2,7 @@ package com.example.expenseapp.helpers
 
 class Validation {
 
-    object validate {
+    companion object {
 
 
         fun isEmailValid(email: String): Boolean {
@@ -27,6 +27,10 @@ class Validation {
                     containsLowercase.containsMatchIn(password) &&
                     containsDigit.containsMatchIn(password) &&
                     containsSpecialChar.containsMatchIn(password))
+        }
+
+        fun confirmPassword(password: String,confirmPassword: String): Boolean{
+            return password == confirmPassword
         }
 
     }

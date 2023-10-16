@@ -31,6 +31,8 @@ class LoginActivity : AppCompatActivity() {
         binding.signUp.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
+            finish()
+
         }
 
     }
@@ -39,14 +41,15 @@ class LoginActivity : AppCompatActivity() {
         var email = binding.emailFeild.text.toString()
         var password = binding.passwordFeild.text.toString()
 
-        if (Validation.validate.isEmailValid(email) && Validation.validate.isPasswordValid(password)) {
+        //validation must also be done in view model
+        if (Validation.isEmailValid(email) && Validation.isPasswordValid(password)) {
             loginWithPasswordAndEmail(email, password)
         } else {
             Toast.makeText(this, "Invalid Email or Password", Toast.LENGTH_LONG).show()
         }
     }
 
-
+    //this must be in viewmodel
     fun loginWithPasswordAndEmail(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -57,6 +60,7 @@ class LoginActivity : AppCompatActivity() {
                     var intent = Intent(this@LoginActivity, MainActivity::class.java)
                     intent.putExtra("Email",userEmail.toString())
                     startActivity(intent)
+                    finish()
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show()
