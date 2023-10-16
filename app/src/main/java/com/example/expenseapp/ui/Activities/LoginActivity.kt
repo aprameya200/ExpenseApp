@@ -41,8 +41,10 @@ class LoginActivity : AppCompatActivity() {
         var email = binding.emailFeild.text.toString()
         var password = binding.passwordFeild.text.toString()
 
+        var validation: Validation = Validation("",email,password,"")
+
         //validation must also be done in view model
-        if (Validation.isEmailValid(email) && Validation.isPasswordValid(password)) {
+        if (validation.isEmailValid(email) && validation.isPasswordValid(password)) {
             loginWithPasswordAndEmail(email, password)
         } else {
             Toast.makeText(this, "Invalid Email or Password", Toast.LENGTH_LONG).show()
@@ -57,10 +59,16 @@ class LoginActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     val user = auth.currentUser
                     val userEmail = user?.email
-                    var intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    intent.putExtra("Email",userEmail.toString())
-                    startActivity(intent)
-                    finish()
+
+                    if (user?.isEmailVerified == true){
+                        var intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        intent.putExtra("Email",userEmail.toString())
+                        startActivity(intent)
+                        finish()
+                    }else{
+                        Toast.makeText(this, "Please verify yur email", Toast.LENGTH_SHORT).show()
+                    }
+
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show()
