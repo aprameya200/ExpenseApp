@@ -4,14 +4,19 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.expenseapp.Entity.User
+import com.example.expenseapp.Repository.LoginRegisterRepository
 
 class LoginRegistrationViewModel(application: Application) : AndroidViewModel(application) {
 
-    fun createUser() {
-        // Call the repository to create a user
-//        userRepository.createUser { success ->
-//            _createUserStatus.value = success
-//        }
+    val repository: LoginRegisterRepository = LoginRegisterRepository()
+
+    private val _userRegistered = MutableLiveData<Boolean>()
+    val userRegistered: LiveData<Boolean>
+        get() = _userRegistered
+
+    fun createUser(user: User) {
+        _userRegistered.value = repository.registerUserWithEmailAndPassword(user)
     }
 
     fun addUserToDB() {

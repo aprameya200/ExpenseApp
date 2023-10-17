@@ -3,6 +3,7 @@ package com.example.expenseapp.ui.Activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.example.expenseapp.R
 import com.example.expenseapp.databinding.ActivityLoginBinding
@@ -21,7 +22,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         window.statusBarColor = getColor(R.color.orange)
 
         binding.loginButton.setOnClickListener{
@@ -29,9 +29,13 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.signUp.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-            finish()
+            try {
+                val intent = Intent(this, RegisterActivity::class.java)
+                startActivity(intent)
+                finish()
+            }catch (e: Exception){
+                Log.d("Excepttion",e.toString())
+            }
 
         }
 
