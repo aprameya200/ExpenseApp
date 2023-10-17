@@ -28,7 +28,7 @@ class LoginRegisterRepository {
 
                     val user: FirebaseUser? = auth.currentUser
 
-                    val collection = db.collection("Users")
+                    val collection = user?.let { db.collection("Users").document(it.uid) }
                     val data = hashMapOf(
                         "fullName" to userRegister.fullName,
                         "email" to userRegister.email,
@@ -36,16 +36,18 @@ class LoginRegisterRepository {
                         // Add other fields as needed
                     )
 
-                    collection.add(data)
-                        .addOnSuccessListener { documentReference ->
-                            // The documentReference variable contains the unique Document ID for the new object
-                            val newDocumentId = documentReference.id
-                            userCreated = true
-                        }
-                        .addOnFailureListener { e ->
-                            // Handle the error
-                            userCreated = false
-                        }
+                    if (collection != null) {
+                        collection.set(data)
+                            .addOnSuccessListener { documentReference ->
+                                // The documentReference variable contains the unique Document ID for the new object
+                                val newDocumentId = user?.uid
+                                userCreated = true
+                            }
+                            .addOnFailureListener { e ->
+                                // Handle the error
+                                userCreated = false
+                            }
+                    }
 
 
                     user?.sendEmailVerification()

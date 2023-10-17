@@ -122,7 +122,6 @@
             android:background="@drawable/from_component_background"
             android:gravity="center_vertical"
             android:hint="Note"
-            android:inputType="number"
             android:paddingHorizontal="30dp"
             android:textAllCaps="false"
             android:textColor="@color/black"

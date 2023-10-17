@@ -4,10 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.expenseapp.Entity.Transactions
 import com.example.expenseapp.R
+import com.example.expenseapp.ViewModel.TransactionViewModel
 import com.example.expenseapp.databinding.ActivityMainBinding
 import com.example.expenseapp.enums.Category
 import com.example.expenseapp.enums.TransactionType
@@ -25,12 +27,18 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var showDate: Calendar
 
+    lateinit var viewModel: TransactionViewModel
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolBar)
+
+        viewModel = ViewModelProvider(this).get(TransactionViewModel::class.java)
+
         supportActionBar?.title = "Transactions"
         window.statusBarColor = getColor(R.color.orange)
 
@@ -59,21 +67,26 @@ class MainActivity : AppCompatActivity() {
         transactionsRecycler = binding.recyclerView
         transactionsRecycler.layoutManager = GridLayoutManager(this, 1)
 
+//
+//        val listOfAccounts = listOf<Transactions>(
+//            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.BUSINESS, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.LOAN, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.INVESTMENT, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.OTHERS, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+//            )
 
-        val listOfAccounts = listOf<Transactions>(
-            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-            Transactions( "Hello", Category.BUSINESS, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
-            Transactions( "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
-            Transactions( "Hello", Category.LOAN, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
-            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-            Transactions( "Hello", Category.INVESTMENT, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-            Transactions( "Hello", Category.OTHERS, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-            Transactions( "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
-            )
 
+        viewModel.getTransactions()
 
-        transactionsRecycler.adapter = TransactionsAdapter(this,listOfAccounts)
+        viewModel.allTransactions.observe(this){
+            transactionsRecycler.adapter = TransactionsAdapter(this,it)
+        }
+
 
     }
 

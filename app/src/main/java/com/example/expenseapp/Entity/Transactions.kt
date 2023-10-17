@@ -5,9 +5,9 @@ import com.example.expenseapp.enums.TransactionType
 import java.util.Date
 
 data class Transactions(
-    val title: String = "",
+    var title: String = "",
     var category: Category = Category.OTHERS,
-    val type: TransactionType = TransactionType.INCOME,
+    var type: TransactionType = TransactionType.INCOME,
     var account: String  = "",
     var note: String = "",
     var date: Date = Date(),
