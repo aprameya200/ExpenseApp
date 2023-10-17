@@ -15,26 +15,22 @@ class Validation(
 
         if (!isFullNameValid(fullName)) {
             Toast.makeText(context, "Full name is invalid", Toast.LENGTH_LONG).show()
-            !allValid
+            return false
         }
         if (!isEmailValid(email)) {
             Toast.makeText(context, "Email is invalid", Toast.LENGTH_LONG).show()
-            !allValid
+            return false
         }
         if (!isPasswordValid(password)) {
             Toast.makeText(context, "Password is invalid", Toast.LENGTH_LONG).show()
-            !allValid
+            return false
         }
         if (!confirmPassword(password, confirmPassword)) {
             Toast.makeText(context, "Passwords do not match", Toast.LENGTH_LONG).show()
-            !allValid
+            return false
         }
 
-        if (allValid) {
-            allValid = true
-        }
-
-        return allValid
+        return true
     }
 
     fun isFullNameValid(fullName: String): Boolean {

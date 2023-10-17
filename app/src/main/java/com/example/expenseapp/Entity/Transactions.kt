@@ -5,13 +5,12 @@ import com.example.expenseapp.enums.TransactionType
 import java.util.Date
 
 data class Transactions(
-    val id: Int,
-    val title: String,
-    val category: Category,
-    val type: TransactionType,
-    val account: String,
-    val note: String,
-    val date: Date,
-    val amount: Double
+    val title: String = "",
+    var category: Category = Category.OTHERS,
+    val type: TransactionType = TransactionType.INCOME,
+    var account: String  = "",
+    var note: String = "",
+    var date: Date = Date(),
+    var amount: Double = 0.0
 ) {
 }

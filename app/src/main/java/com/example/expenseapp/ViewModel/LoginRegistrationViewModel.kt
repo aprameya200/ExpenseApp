@@ -15,8 +15,17 @@ class LoginRegistrationViewModel(application: Application) : AndroidViewModel(ap
     val userRegistered: LiveData<Boolean>
         get() = _userRegistered
 
+
+    private val _userLoggedIn = MutableLiveData<Boolean>()
+    val userLoggedIn: LiveData<Boolean>
+        get() = _userLoggedIn
+
     fun createUser(user: User) {
         _userRegistered.value = repository.registerUserWithEmailAndPassword(user)
+    }
+
+    fun loginInUser(user: User){
+        _userLoggedIn.value = repository.loginWithPasswordAndEmail(user)
     }
 
     fun addUserToDB() {
@@ -24,12 +33,6 @@ class LoginRegistrationViewModel(application: Application) : AndroidViewModel(ap
 //        userRepository.addUserToDB()
     }
 
-    fun signIn() {
-        // Call the repository to perform user sign-in
-//        userRepository.signIn { success ->
-//            _signInStatus.value = success
-//        }
-    }
 
     fun verifyEmail() {
         // Logic to send email verification and verify user email

@@ -31,6 +31,10 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+        initUI()
+    }
+
+    private fun initUI() {
         window.statusBarColor = getColor(R.color.orange)
 
         with(binding) {
@@ -42,6 +46,11 @@ class RegisterActivity : AppCompatActivity() {
 
         binding.signUpButton.setOnClickListener {
             submitForm()
+        }
+
+        binding.LogIn.setOnClickListener {
+            startActivity(Intent(this,LoginActivity::class.java))
+            finish()
         }
     }
 
@@ -59,16 +68,13 @@ class RegisterActivity : AppCompatActivity() {
 
             viewModel.userRegistered.observe(this) {
                 if (it) {
-                    var intent =
-                        Intent(this@RegisterActivity, WaitingVerificationActivity::class.java)
-                    startActivity(intent)
+                    startActivity(Intent(this@RegisterActivity, WaitingVerificationActivity::class.java))
                     finish()
                 } else {
                     Toast.makeText(this, "Error Occured", Toast.LENGTH_LONG).show()
                 }
             }
         }
-
     }
 
 }

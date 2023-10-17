@@ -9,14 +9,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.example.expenseapp.AccountsAdapter
+import com.example.expenseapp.Entity.Transactions
 import com.example.expenseapp.databinding.BottomDialogBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.Calendar
 import com.example.expenseapp.R
 import com.example.expenseapp.databinding.CategoryFragmentBinding
+import com.example.expenseapp.enums.Category
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class AddTransactionFragment : BottomSheetDialogFragment() {
@@ -24,19 +28,20 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
     lateinit var binding: BottomDialogBinding
     lateinit var categoryBinding: CategoryFragmentBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    var addingTransaction = Transactions()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = BottomDialogBinding.inflate(layoutInflater)
         categoryBinding = CategoryFragmentBinding.inflate(layoutInflater)
 
-//        EventBus.builder().installDefaultEventBus()
-
-        // Post the message event to EventBus
-//        val messageEvent = MessageEvent("Hello, EventBus!")
         EventBus.getDefault().register(this)
+
+        initUI()
+
+        return binding.root
+    }
+
+    private fun initUI() {
 
         var incomeButton = binding.incomeToggle
         var expenseButton = binding.expenseToggle
@@ -64,15 +69,17 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
                 myCalander.get(Calendar.DAY_OF_MONTH)
             ).show()
 
+            addingTransaction.date = myCalander.time
         }
+
+        addingTransaction.amount = binding.amountText.text.toString().toDouble()
 
         binding.selectCategory.setOnClickListener {
             var cat = SelectCategoryFragment()
             cat.show(childFragmentManager, "hi") //shows the dialog framgnet
+
         }
 
-
-        incomeButton.isSelected = true
 
         incomeButton.setOnClickListener {
             incomeButton.backgroundTintList =
@@ -99,24 +106,26 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
             var acc = SelectAccountFragment()
             acc.show(childFragmentManager, "a")
 
-            AccountsAdapter.accountSelection.clickData.observe(viewLifecycleOwner){
+            AccountsAdapter.accountSelection.clickData.observe(viewLifecycleOwner) {
                 binding.accountCategory.text = it
+                addingTransaction.account = it
+
             }
+
         }
 
+        addingTransaction.note = binding.noteText.text.toString()
 
-
-
-
-
-        return binding.root
+        binding.saveTransaction.setOnClickListener {
+            //add transaction from repo
+        }
     }
 
     @SuppressLint("SetTextI18n")
     private fun updateDate(myCalander: Calendar) {
-        binding.selectDateButton.text =
-            myCalander.get(Calendar.YEAR).toString() + "/" + myCalander.get(Calendar.MONTH)
-                .toString() + "/" + myCalander.get(Calendar.DAY_OF_MONTH).toString()
+        val dateFormat = SimpleDateFormat("dd MMMM, yyyy")
+
+        binding.selectDateButton.text = dateFormat.format(myCalander.time)
     }
 
     override fun onDestroy() {
@@ -128,6 +137,7 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
     fun onCategorySelected(category: String) {
         Log.d("SecondActivity", "Received message:" + category + " \"")
         binding.selectCategory.text = category
+        addingTransaction.category = Category.setEnumFromString(category)
     }
 
 

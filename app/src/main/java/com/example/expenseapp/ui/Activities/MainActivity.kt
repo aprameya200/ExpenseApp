@@ -61,15 +61,15 @@ class MainActivity : AppCompatActivity() {
 
 
         val listOfAccounts = listOf<Transactions>(
-            Transactions(1, "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-            Transactions(1, "Hello", Category.BUSINESS, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
-            Transactions(1, "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
-            Transactions(1, "Hello", Category.LOAN, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
-            Transactions(1, "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-            Transactions(1, "Hello", Category.INVESTMENT, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-            Transactions(1, "Hello", Category.OTHERS, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-            Transactions(1, "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-            Transactions(1, "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+            Transactions( "Hello", Category.BUSINESS, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+            Transactions( "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+            Transactions( "Hello", Category.LOAN, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+            Transactions( "Hello", Category.INVESTMENT, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+            Transactions( "Hello", Category.OTHERS, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+            Transactions( "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
             )
 
 
