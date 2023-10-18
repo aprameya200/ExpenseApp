@@ -188,7 +188,7 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
     fun onCategorySelected(category: String) {
         Log.d("SecondActivity", "Received message:" + category + " \"")
         binding.selectCategory.text = category
-        addingTransaction.category = Category.setEnumFromString(category)
+        addingTransaction.category = Category.setEnumFromString(category.toString().toUpperCase())
     }
 
 

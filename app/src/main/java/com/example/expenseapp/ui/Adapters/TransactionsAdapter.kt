@@ -84,6 +84,7 @@ class TransactionsAdapter(val context: Context, val transactionlist: List<Transa
 
     }
 
+
     fun setArrowImage(transaction: TransactionType): Int {
         return when (transaction) {
             TransactionType.EXPENSE -> R.drawable.baseline_arrow_drop_down_24

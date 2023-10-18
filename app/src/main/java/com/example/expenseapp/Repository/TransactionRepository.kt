@@ -2,6 +2,8 @@ package com.example.expenseapp.Repository
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.expenseapp.Entity.Transactions
 import com.example.expenseapp.enums.Category
 import com.example.expenseapp.enums.TransactionType
@@ -47,43 +49,43 @@ class TransactionRepository {
         return transactionAdded
     }
 
-    fun getTransactions(): List<Transactions> {
+    fun getAllTransactions(): LiveData<List<Transactions>> {
+        val data = MutableLiveData<List<Transactions>>()
 
-        val allTransactions: MutableList<Transactions> = mutableListOf()
+        // Replace "users" with your users collection and "transactions" with your subcollection
+        auth.currentUser?.let {
+            db.collection("Users")
+                .document(it.uid)
+                .collection("Transactions")
+                .addSnapshotListener { querySnapshot, error ->
+                    if (error != null) {
+                        // Handle the error
+                    } else {
+                        val transactionList = mutableListOf<Transactions>()
+                        if (querySnapshot != null) {
+                            for (document in querySnapshot) {
+//                                val transaction = document.toObject(Transactions::class.java)
+                                val title = document.data["title"].toString()
+                                val amount = document.data["amount"].toString().toDouble()
+                                val category = Category.setEnumFromString(document.data["category"].toString())
+                                val type =  TransactionType.setTypeFromString(document.data["type"].toString())
+                                val account = document.data["account"].toString()
+                                val note = document.data["note"].toString()
 
-        val usersCollection = db.collection("Users")
-
-// Reference the user's document based on UID
-        val userDocument = auth.currentUser?.let { usersCollection.document(it.uid) }
-
-// Reference the "Transactions" collection within the user's document
-        val transactionsCollection = userDocument?.collection("Transactions")
-
-// Query for all transactions in the "Transactions" collection
-        if (transactionsCollection != null) {
-            transactionsCollection.get()
-                .addOnSuccessListener { querySnapshot: QuerySnapshot ->
-                    for (document in querySnapshot) {
-
-                        val transactionData = document.data
-                        // Process the transaction data as needed
-
-                        val title = transactionData["title"]
-                        val amout = transactionData["amount"]
-
-                        val transaction = Transactions(title.toString(),Category.OTHERS,TransactionType.EXPENSE,"cash","aa",
-                            Date(),amout.toString().toDouble()
-                        )
-
-                        allTransactions.add(transaction)
+                                val transaction = Transactions(
+                                    title, category, type, account, note,
+                                    Date(), amount
+                                )
+                                transactionList.add(transaction)
+                            }
+                        }
+                        data.value = transactionList
                     }
-                }
-                .addOnFailureListener { exception ->
-                    // Handle any errors that occur during the query
                 }
         }
 
-        return allTransactions
+        return data
     }
+
 
 }

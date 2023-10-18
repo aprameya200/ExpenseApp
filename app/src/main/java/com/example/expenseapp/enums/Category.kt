@@ -8,24 +8,24 @@ enum class Category {
     companion object{
         fun getCategoryName(category: Category): String {
             val stringCategory = when (category) {
-                CASH -> "Cash"
-                BUSINESS -> "Business"
-                INVESTMENT -> "Investment"
-                LOAN -> "Loan"
-                OTHERS -> "Others"
-                RENT -> "Rent"
-                else -> "None"
+                CASH -> "CASH"
+                BUSINESS -> "BUSINESS"
+                INVESTMENT -> "INVESTMENT"
+                LOAN -> "LOAN"
+                OTHERS -> "OTHERS"
+                RENT -> "RENT"
+                else -> "NONE"
             }
             return stringCategory
         }
 
         fun setEnumFromString(category: String): Category {
             val stringCategory = when (category) {
-                "Cash" -> CASH
-                "Business" -> BUSINESS
-                "Investment" -> INVESTMENT
-                "Loan" -> LOAN
-                "Rent" -> RENT
+                "CASH" -> CASH
+                "BUSINESS" -> BUSINESS
+                "INVESTMENT" -> INVESTMENT
+                "LOAN" -> LOAN
+                "RENT" -> RENT
                 else -> OTHERS
             }
             return stringCategory

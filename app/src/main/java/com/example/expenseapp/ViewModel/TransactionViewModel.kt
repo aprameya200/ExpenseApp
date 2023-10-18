@@ -15,8 +15,17 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     val transactionAdded: LiveData<Boolean>
         get() = _transactionAdded
 
-    private val _allTransactions = MutableLiveData<List<Transactions>>()
-    val allTransactions: MutableLiveData<List<Transactions>>
+    private var _allTransactions = MutableLiveData<List<Transactions>>()
+
+    init {
+        var transactionsLD = getTransactions()
+
+        transactionsLD.observeForever { transactionList ->
+            // Update your LiveData with the new value
+            _allTransactions.postValue(transactionList)
+        }
+    }
+    val allTransactions: LiveData<List<Transactions>>
         get() = _allTransactions
 
 
@@ -24,9 +33,9 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         _transactionAdded.value = repository.addTransaction(transaction)
     }
 
-    fun getTransactions(): List<Transactions>{
-        _allTransactions.value = repository.getTransactions()
+    fun getTransactions(): LiveData<List<Transactions>>{
+//        _allTransactions = repository.getAllTransactions()
 
-        return _allTransactions.value!!
+        return repository.getAllTransactions()
     }
 }

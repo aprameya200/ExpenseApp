@@ -67,21 +67,6 @@ class MainActivity : AppCompatActivity() {
         transactionsRecycler = binding.recyclerView
         transactionsRecycler.layoutManager = GridLayoutManager(this, 1)
 
-//
-//        val listOfAccounts = listOf<Transactions>(
-//            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-//            Transactions( "Hello", Category.BUSINESS, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
-//            Transactions( "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
-//            Transactions( "Hello", Category.LOAN, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
-//            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-//            Transactions( "Hello", Category.INVESTMENT, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-//            Transactions( "Hello", Category.OTHERS, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-//            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
-//            Transactions( "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
-//            )
-
-
-        viewModel.getTransactions()
 
         viewModel.allTransactions.observe(this){
             transactionsRecycler.adapter = TransactionsAdapter(this,it)
