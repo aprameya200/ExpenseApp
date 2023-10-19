@@ -1,28 +1,18 @@
 package com.example.expenseapp.ui.Activities
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import androidx.activity.viewModels
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.expenseapp.Database.ExpenseDatabase
 import com.example.expenseapp.Entity.Transactions
 import com.example.expenseapp.R
-import com.example.expenseapp.ViewModel.DatabaseViewModel
 import com.example.expenseapp.ViewModel.TransactionViewModel
 import com.example.expenseapp.databinding.ActivityMainBinding
-import com.example.expenseapp.enums.Category
-import com.example.expenseapp.enums.TransactionType
 import com.example.expenseapp.ui.Adapters.TransactionsAdapter
 import com.example.expenseapp.ui.Fragments.AddTransactionFragment
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -36,8 +26,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var showDate: Calendar
 
     val viewModel: TransactionViewModel by viewModels()
-    val roomModel: DatabaseViewModel by viewModels()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
