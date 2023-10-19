@@ -76,23 +76,27 @@ class LoginRegisterRepository {
         var userLogin = false
         var emailVerified = false
 
-        auth.signInWithEmailAndPassword(user.email, user.password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+        if (auth.currentUser != null){
+            return true
+        }
 
-                    userLogin = true
+            auth.signInWithEmailAndPassword(user.email, user.password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
 
-                    // Sign in success, update UI with the signed-in user's information
-                    val user = auth.currentUser
-                    val userEmail = user?.email
+                        userLogin = true
 
-                    //validation messages
-                    emailVerified = user?.isEmailVerified == true
+                        // Sign in success, update UI with the signed-in user's information
+                        val user = auth.currentUser
+                        val userEmail = user?.email
 
-                } else {
-                    userLogin = false
+                        //validation messages
+                        emailVerified = user?.isEmailVerified == true
+
+                    } else {
+                        userLogin = false
+                    }
                 }
-            }
 
         return userLogin == emailVerified
     }

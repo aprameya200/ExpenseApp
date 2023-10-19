@@ -3,18 +3,26 @@ package com.example.expenseapp.ui.Activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import androidx.activity.viewModels
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.expenseapp.Database.ExpenseDatabase
 import com.example.expenseapp.Entity.Transactions
 import com.example.expenseapp.R
+import com.example.expenseapp.ViewModel.DatabaseViewModel
 import com.example.expenseapp.ViewModel.TransactionViewModel
 import com.example.expenseapp.databinding.ActivityMainBinding
 import com.example.expenseapp.enums.Category
 import com.example.expenseapp.enums.TransactionType
 import com.example.expenseapp.ui.Adapters.TransactionsAdapter
 import com.example.expenseapp.ui.Fragments.AddTransactionFragment
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -27,7 +35,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var showDate: Calendar
 
-    lateinit var viewModel: TransactionViewModel
+    val viewModel: TransactionViewModel by viewModels()
+    val roomModel: DatabaseViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +46,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolBar)
 
-        viewModel = ViewModelProvider(this).get(TransactionViewModel::class.java)
+//        val database = ExpenseDatabase.getDatabase(this)
+//        viewModel = ViewModelProvider(this).get(TransactionViewModel::class.java)
+//        roomModel = ViewModelProvider(this).get(DatabaseViewModel::class.java)
+
+//        viewModel.getRoomTransactions()
+
 
         supportActionBar?.title = "Transactions"
         window.statusBarColor = getColor(R.color.orange)
@@ -51,8 +65,6 @@ class MainActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener {
             binding.mainDate.text = subtractDate(binding.mainDate.text.toString())
 
-            val intent = Intent(this,LoginActivity::class.java)
-            startActivity(intent);
         }
 
         binding.forwardButton.setOnClickListener {
@@ -67,11 +79,45 @@ class MainActivity : AppCompatActivity() {
         transactionsRecycler = binding.recyclerView
         transactionsRecycler.layoutManager = GridLayoutManager(this, 1)
 
+//
+//        val listOfAccounts = listOf<Transactions>(
+//            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.BUSINESS, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.LOAN, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.INVESTMENT, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.OTHERS, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.CASH, TransactionType.INCOME,"Savings","Nope",Date(),129.3),
+//            Transactions( "Hello", Category.CASH, TransactionType.EXPENSE,"Savings","Nope",Date(),129.3),
+//            )
 
-        viewModel.allTransactions.observe(this){
-            transactionsRecycler.adapter = TransactionsAdapter(this,it)
+
+//        viewModel.getTransactions()
+
+        var items = listOf<Transactions>()
+
+//        lifecycleScope.launch {
+//            viewModel.getRoomTransactions().collect { transactions ->
+//                items = transactions.value!!
+//                transactionsRecycler.adapter = TransactionsAdapter(applicationContext, items)
+//            }
+//        }
+//        transactionsRecycler.adapter = TransactionsAdapter(this, items)
+
+//        viewModel.allTransactions.observe(this) {
+//            it?.let {
+//                transactionsRecycler.adapter = TransactionsAdapter(this, it)
+//            }
+//        }
+
+        viewModel.allTransactions.observe(this) {
+            it?.let {
+                Log.d("String List",it.toString())
+                transactionsRecycler.adapter = TransactionsAdapter(this, it)
+
+            }
         }
-
 
     }
 

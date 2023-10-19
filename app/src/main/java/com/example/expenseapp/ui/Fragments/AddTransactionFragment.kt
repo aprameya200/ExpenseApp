@@ -35,7 +35,7 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
     lateinit var binding: BottomDialogBinding
     lateinit var categoryBinding: CategoryFragmentBinding
 
-    var addingTransaction = Transactions()
+    var addingTransaction = Transactions(null)
 
     lateinit var viewModel: TransactionViewModel
 
@@ -46,9 +46,7 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
         categoryBinding = CategoryFragmentBinding.inflate(layoutInflater)
 
         EventBus.getDefault().register(this)
-
         initUI()
-
         return binding.root
     }
 

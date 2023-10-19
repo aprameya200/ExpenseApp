@@ -1,5 +1,6 @@
 package com.example.expenseapp.Dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -10,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface TransactionsDao {
 
     @Query("SELECT * FROM transactions")
-    fun getAllTransactionsFromDatabase() : Flow<List<Transactions>>
+    fun getAllTransactionsFromDatabase() : List<Transactions>
 
     @Insert
     fun addTransactions(transactions: Transactions)
