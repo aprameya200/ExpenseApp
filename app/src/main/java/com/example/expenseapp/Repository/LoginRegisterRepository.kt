@@ -76,9 +76,9 @@ class LoginRegisterRepository {
         var userLogin = false
         var emailVerified = false
 
-        if (auth.currentUser != null){
-            return true
-        }
+//        if (auth.currentUser != null){
+//            return true
+//        }
 
             auth.signInWithEmailAndPassword(user.email, user.password)
                 .addOnCompleteListener { task ->
