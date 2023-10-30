@@ -1,5 +1,7 @@
 package com.example.expenseapp.ui.Activities
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -29,8 +31,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (auth.currentUser != null){
-            val intent = Intent(this,MainActivity::class.java)
-            startActivity(intent)
+            navigateToActivity(this,MainActivity::class.java)
         }else{
             initUI()
         }
@@ -47,9 +48,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.signUp.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-            finish()
+            navigateToActivity(this,RegisterActivity::class.java)
         }
     }
 
@@ -66,9 +65,7 @@ class LoginActivity : AppCompatActivity() {
 
             viewModel.userLoggedIn.observe(this) {
                 if (it) {
-                    var intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    navigateToActivity(this,MainActivity::class.java)
                 } else {
                     Toast.makeText(this, "Please verify your email", Toast.LENGTH_SHORT).show()
                 }
@@ -77,6 +74,12 @@ class LoginActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Invalid Email or Password", Toast.LENGTH_LONG).show()
         }
+    }
+
+    fun navigateToActivity(sourceActivity: Activity, targetActivityClass: Class<out Activity>) {
+        val intent = Intent(sourceActivity, targetActivityClass)
+        sourceActivity.startActivity(intent)
+        finish()
     }
 
 }

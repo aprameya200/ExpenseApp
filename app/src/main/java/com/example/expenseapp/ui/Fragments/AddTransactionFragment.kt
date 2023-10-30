@@ -23,6 +23,7 @@ import com.example.expenseapp.ViewModel.TransactionViewModel
 import com.example.expenseapp.databinding.CategoryFragmentBinding
 import com.example.expenseapp.enums.Category
 import com.example.expenseapp.enums.TransactionType
+import com.example.expenseapp.helpers.ConvertDate
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -143,7 +144,8 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
             myCalander.get(Calendar.DAY_OF_MONTH)
         ).show()
 
-        addingTransaction.date = myCalander.time
+//        addingTransaction.date = myCalander.time
+        Log.d("Date",myCalander.time.toString())
 
     }
 
@@ -175,6 +177,7 @@ class AddTransactionFragment : BottomSheetDialogFragment() {
     private fun updateDate(myCalander: Calendar) {
         val dateFormat = SimpleDateFormat("dd MMMM, yyyy")
         binding.selectDateButton.text = dateFormat.format(myCalander.time)
+        addingTransaction.date = ConvertDate.convertStringToDate(binding.selectDateButton.text.toString())!!
     }
 
     override fun onDestroy() {

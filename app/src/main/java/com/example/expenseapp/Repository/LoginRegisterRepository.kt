@@ -1,5 +1,6 @@
 package com.example.expenseapp.Repository
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
@@ -71,14 +72,12 @@ class LoginRegisterRepository {
         return userCreated == emailSent
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun loginWithPasswordAndEmail(user: User): Boolean {
 
         var userLogin = false
         var emailVerified = false
 
-//        if (auth.currentUser != null){
-//            return true
-//        }
 
             auth.signInWithEmailAndPassword(user.email, user.password)
                 .addOnCompleteListener { task ->
@@ -99,6 +98,10 @@ class LoginRegisterRepository {
                 }
 
         return userLogin == emailVerified
+    }
+
+    fun logout(){
+        auth.signOut()
     }
 
 }

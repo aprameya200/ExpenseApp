@@ -1,30 +1,25 @@
 package com.example.expenseapp.ViewModel
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
+
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
-import androidx.work.ListenableWorker
 import com.example.expenseapp.Database.ExpenseDatabase
 import com.example.expenseapp.Entity.Transactions
 import com.example.expenseapp.Repository.TransactionRepository
+import com.example.expenseapp.helpers.ConvertDate
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.DEFAULT_CONCURRENCY_PROPERTY_NAME
+
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class TransactionViewModel(application: Application) : AndroidViewModel(application) {
 
     var repository: TransactionRepository
+
 
     private val _transactionAdded = MutableLiveData<Boolean>()
     val transactionAdded: LiveData<Boolean>
@@ -32,53 +27,65 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
 
     private var _allTransactions = MutableLiveData<List<Transactions>>()
 
-    val _loadLoad: MutableLiveData<List<Transactions>> = MutableLiveData<List<Transactions>>()
+    private var _filteredTransactions = MutableLiveData<List<Transactions>>()
 
-    val loadLoad: LiveData<List<Transactions>>
-        get() = _loadLoad
+    private var _transactionsStore = MutableLiveData<List<Transactions>>()
 
-    val StringList = MutableLiveData<List<Transactions>>()
 
-    lateinit var allTransactionsLiveData: LiveData<List<Transactions>>
+    val allTransactions: LiveData<List<Transactions>>
+        get() = _allTransactions
+
+    val filterTransactions: LiveData<List<Transactions>>
+        get() = _filteredTransactions
+
+    val transactionsStore: LiveData<List<Transactions>>
+        get() = _transactionsStore
 
     init {
 
         val dao = ExpenseDatabase.getDatabase(application).getRoomDao()
         repository = TransactionRepository(dao)
 
-
         viewModelScope.launch(Dispatchers.Main) {
-            repository.flowOfData().collect { result ->
+            repository.getAllTransactions().collect { result ->
                 _allTransactions.value = result
+                _transactionsStore.value = result
             }
-////
-//        var transactionsLD = getTransactions()
-//
-//        transactionsLD.observeForever { transactionList ->
-//            // Update your LiveData with the new value
-//            _allTransactions.postValue(transactionList)
-//            Log.d("THIS",transactionList.toString())
-//
-//        }
+
         }
     }
 
-    val allTransactions: LiveData<List<Transactions>>
-        get() = _allTransactions
 
 
     fun addTransaction(transaction: Transactions) {
         _transactionAdded.value = repository.addTransaction(transaction)
     }
 
-    fun getTransactions(): LiveData<List<Transactions>> {
-//        _allTransactions = repository.getAllTransactions()
+    fun filterDate(dateMinusOne: String){
+        var allTransaction = _transactionsStore.value!!
 
-        return repository.getAllTransactions()
+        Log.d("All", _transactionsStore.value!!.size.toString())
+
+        var filteredDate = mutableListOf<Transactions>()
+
+        for (transaction in allTransaction){
+            if (transaction.date == ConvertDate.convertStringToDate(dateMinusOne)){
+                filteredDate.add(transaction)
+                var bolleann = transaction.date == ConvertDate.convertStringToDate(dateMinusOne)
+                Log.d("Transaction Bool HERE",bolleann.toString())
+            }
+
+            Log.d("Transactions",transaction.date.toString())
+            Log.d("Transaction Conversion",
+                ConvertDate.convertStringToDate(dateMinusOne).toString()
+            )
+
+        }
+
+//        Log.d("Transactions",filteredDate.toString())
+        _allTransactions.value = filteredDate //new vLUES ARE ADDED TO THIS LIST SO OTHER WONT GET UPDATED
 
     }
 
-//    fun getRoomTransactions(): Flow<LiveData<List<Transactions>>> {
-//        return  repository.getTransactionsCombined()
-//    }
+
 }

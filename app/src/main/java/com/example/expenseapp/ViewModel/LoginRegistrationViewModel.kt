@@ -28,6 +28,10 @@ class LoginRegistrationViewModel(application: Application) : AndroidViewModel(ap
         _userLoggedIn.value = repository.loginWithPasswordAndEmail(user)
     }
 
+    fun logout(){
+        repository.logout()
+    }
+
     fun addUserToDB() {
         // Logic to add user data to a database
 //        userRepository.addUserToDB()

@@ -20,6 +20,8 @@
         app:titleTextAppearance="@style/Toolbar.TitleText"
         app:titleTextColor="@color/white" />
 
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/dateRow"
         android:layout_width="match_parent"
@@ -61,6 +63,17 @@
             app:layout_constraintEnd_toStartOf="@+id/forwardButton"
             app:layout_constraintStart_toEndOf="@+id/backButton"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/orange"
+            android:src="@drawable/baseline_logout_24"
+            android:id="@+id/logOut"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/mainDate"
+            app:layout_constraintStart_toEndOf="@+id/backButton"
+            app:layout_constraintTop_toTopOf="parent"></ImageButton>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -177,7 +190,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:text="400"
+            android:text="40000000"
             android:textSize="17sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/total"

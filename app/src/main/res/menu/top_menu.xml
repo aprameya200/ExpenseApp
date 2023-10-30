@@ -14,5 +14,9 @@
         app:showAsAction="always"
         android:icon="@drawable/baseline_star_24"/>
 
+    <item android:title="Logout"
+        app:showAsAction="always"
+        android:icon="@drawable/baseline_logout_24"/>
+
 
 </menu>

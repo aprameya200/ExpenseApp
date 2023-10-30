@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.example.expenseapp.Dao.TransactionsDao
 import com.example.expenseapp.Entity.Transactions
 
-@Database(entities = [Transactions::class], version = 2)
+@Database(entities = [Transactions::class], version = 1)
 @TypeConverters(Transactions.DateTypeConverter::class) // Add this line
 abstract class ExpenseDatabase : RoomDatabase() {
 
