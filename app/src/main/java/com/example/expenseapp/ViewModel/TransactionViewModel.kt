@@ -15,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.DEFAULT_CONCURRENCY_PROPERTY_NAME
 
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.util.Date
 
 class TransactionViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -50,6 +52,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             repository.getAllTransactions().collect { result ->
                 _allTransactions.value = result
                 _transactionsStore.value = result
+                filterDate(ConvertDate.formatDate(LocalDate.now()))
             }
 
         }
@@ -61,30 +64,32 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         _transactionAdded.value = repository.addTransaction(transaction)
     }
 
-    fun filterDate(dateMinusOne: String){
+    fun filterDate(date: String){
+
         var allTransaction = _transactionsStore.value!!
-
-        Log.d("All", _transactionsStore.value!!.size.toString())
-
         var filteredDate = mutableListOf<Transactions>()
 
         for (transaction in allTransaction){
-            if (transaction.date == ConvertDate.convertStringToDate(dateMinusOne)){
+            if (transaction.date == ConvertDate.convertStringToDate(date)){
                 filteredDate.add(transaction)
-                var bolleann = transaction.date == ConvertDate.convertStringToDate(dateMinusOne)
-                Log.d("Transaction Bool HERE",bolleann.toString())
             }
-
-            Log.d("Transactions",transaction.date.toString())
-            Log.d("Transaction Conversion",
-                ConvertDate.convertStringToDate(dateMinusOne).toString()
-            )
-
         }
-
-//        Log.d("Transactions",filteredDate.toString())
         _allTransactions.value = filteredDate //new vLUES ARE ADDED TO THIS LIST SO OTHER WONT GET UPDATED
+    }
 
+    fun filterMonth(month: String){
+
+        var allTransaction = _transactionsStore.value!!
+        var filteredDate = mutableListOf<Transactions>()
+
+        for (transaction in allTransaction){
+            Log.d("Month",transaction.date.toString())
+            if (transaction.date.toString().contains(month)){
+                filteredDate.add(transaction)
+
+            }
+        }
+        _allTransactions.value = filteredDate //new vLUES ARE ADDED TO THIS LIST SO OTHER WONT GET UPDATED
     }
 
 

@@ -11,6 +11,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -74,12 +75,12 @@ class TransactionRepository(private val transactionsDao: TransactionsDao) {
     fun getAllTransactions(): Flow<List<Transactions>> = callbackFlow {
 
         var fromLocalDatabase: List<Transactions> = listOf()
-//
-//        withContext(Dispatchers.IO) {
-//            fromLocalDatabase = transactionsDao.getAllTransactionsFromDatabase()
-//        }
-//
-//        trySend(fromLocalDatabase)
+
+        withContext(Dispatchers.IO) {
+            fromLocalDatabase = transactionsDao.getAllTransactionsFromDatabase()
+        }
+
+        trySend(fromLocalDatabase)
 
         var transactionList = mutableListOf<Transactions>()
 
