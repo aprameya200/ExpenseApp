@@ -33,6 +33,8 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
 
     private var _transactionsStore = MutableLiveData<List<Transactions>>()
 
+    var filteredDate: String = ConvertDate.formatDate(LocalDate.now())
+
 
     val allTransactions: LiveData<List<Transactions>>
         get() = _allTransactions
@@ -52,7 +54,12 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             repository.getAllTransactions().collect { result ->
                 _allTransactions.value = result
                 _transactionsStore.value = result
-                filterDate(ConvertDate.formatDate(LocalDate.now()))
+                if (filteredDate.length > 10){
+                    filterDate(filteredDate)
+                }else{
+                    filterMonth(ConvertDate.getShortMonthFromMonth(filteredDate))
+                    Log.d("Date Filter",filteredDate.toString())
+                }
             }
 
         }
@@ -83,13 +90,13 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         var filteredDate = mutableListOf<Transactions>()
 
         for (transaction in allTransaction){
-            Log.d("Month",transaction.date.toString())
-            if (transaction.date.toString().contains(month)){
-                filteredDate.add(transaction)
-
-            }
+            if (transaction.date.toString().contains(month)) filteredDate.add(transaction)
         }
         _allTransactions.value = filteredDate //new vLUES ARE ADDED TO THIS LIST SO OTHER WONT GET UPDATED
+    }
+
+    fun filterAccordingly(string: String){
+        if (string.length > 10) filterDate(string) else filterMonth(ConvertDate.getShortMonthFromMonth(string))
     }
 
 

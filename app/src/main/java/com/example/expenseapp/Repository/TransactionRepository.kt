@@ -42,9 +42,9 @@ class TransactionRepository(private val transactionsDao: TransactionsDao) {
 
     fun addTransaction(transaction: Transactions): Boolean {
 
-        GlobalScope.launch {
-            transactionsDao.addTransactions(transaction)
-        }
+//        GlobalScope.launch {
+//            transactionsDao.addTransactions(transaction)
+//        }
 
         auth.currentUser?.let {
             db.collection("Users")
@@ -57,7 +57,7 @@ class TransactionRepository(private val transactionsDao: TransactionsDao) {
                     Log.w(TAG, "ADDED  Succesfully")
 
                     transactionAdded = true
-                    return@addOnSuccessListener
+//                    return@addOnSuccessListener
                     Log.w(TAG, transactionAdded.toString())
 
                 }
@@ -65,7 +65,7 @@ class TransactionRepository(private val transactionsDao: TransactionsDao) {
                     // Handle errors if the transaction addition fails
                     Log.w(TAG, "Error adding transaction", e)
                     transactionAdded = false
-                    return@addOnFailureListener
+//                    return@addOnFailureListener
                 }
         }
 
@@ -74,13 +74,13 @@ class TransactionRepository(private val transactionsDao: TransactionsDao) {
 
     fun getAllTransactions(): Flow<List<Transactions>> = callbackFlow {
 
-        var fromLocalDatabase: List<Transactions> = listOf()
-
-        withContext(Dispatchers.IO) {
-            fromLocalDatabase = transactionsDao.getAllTransactionsFromDatabase()
-        }
-
-        trySend(fromLocalDatabase)
+//        var fromLocalDatabase: List<Transactions> = listOf()
+//
+//        withContext(Dispatchers.IO) {
+//            fromLocalDatabase = transactionsDao.getAllTransactionsFromDatabase()
+//        }
+//
+//        trySend(fromLocalDatabase)
 
         var transactionList = mutableListOf<Transactions>()
 

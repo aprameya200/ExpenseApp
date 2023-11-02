@@ -7,6 +7,7 @@ import java.time.LocalDate
 import java.time.Month
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -18,44 +19,50 @@ class ConvertDate {
             return format.parse(dateString)
         }
 
+        fun subtractAccordingly(string: String, isDate: Boolean): String {
+            return if (isDate) subtractDate(string) else subtractMonth(string)
+        }
+
+        fun addAccordingly(string: String, isDate: Boolean): String {
+            return if (isDate) addDate(string) else addMonth(string)
+        }
+
 
         fun convertFirebaseTimestampToDate(firebaseTimestamp: Timestamp): Date {
             val milliseconds = firebaseTimestamp.toDate().time
             return Date(milliseconds)
         }
 
-        fun subtractDate(date: String): String? {
-            try {
-                val dateAsDate =
-                    LocalDate.parse(date, DateTimeFormatter.ofPattern("dd MMMM, yyyy", Locale.US))
-                val oneDayBefore = dateAsDate.minusDays(1)
-                return oneDayBefore.format(DateTimeFormatter.ofPattern("dd MMMM, yyyy", Locale.US))
-            } catch (e: Exception) {
-                return null // Handle parsing errors if necessary
-            }
+        fun subtractDate(date: String): String {
+
+            val dateAsDate =
+                LocalDate.parse(date, DateTimeFormatter.ofPattern("dd MMMM, yyyy", Locale.US))
+            val oneDayBefore = dateAsDate.minusDays(1)
+            return oneDayBefore.format(DateTimeFormatter.ofPattern("dd MMMM, yyyy", Locale.US))
         }
 
         fun subtractMonth(inputMonthString: String): String {
-            val inputMonth = Month.valueOf(inputMonthString.toUpperCase()) // Convert the input string to Month enum
-            val previousMonth = if (inputMonth == Month.JANUARY) Month.DECEMBER else inputMonth.minus(1) // Handle January as a special case
+            val inputMonth =
+                Month.valueOf(inputMonthString.toUpperCase()) // Convert the input string to Month enum
+            val previousMonth =
+                if (inputMonth == Month.JANUARY) Month.DECEMBER else inputMonth.minus(1) // Handle January as a special case
             return previousMonth.getDisplayName(TextStyle.FULL, Locale.getDefault())
         }
 
         fun addMonth(inputMonthString: String): String {
-            val inputMonth = Month.valueOf(inputMonthString.toUpperCase()) // Convert the input string to Month enum
-            val previousMonth = if (inputMonth == Month.JANUARY) Month.DECEMBER else inputMonth.plus(1) // Handle January as a special case
+            val inputMonth =
+                Month.valueOf(inputMonthString.toUpperCase()) // Convert the input string to Month enum
+            val previousMonth =
+                if (inputMonth == Month.DECEMBER) Month.JANUARY else inputMonth.plus(1) // Handle January as a special case
             return previousMonth.getDisplayName(TextStyle.FULL, Locale.getDefault())
         }
 
-        fun addDate(date: String): String? {
-            try {
-                val dateAsDate =
-                    LocalDate.parse(date, DateTimeFormatter.ofPattern("dd MMMM, yyyy", Locale.US))
-                val oneDayBefore = dateAsDate.plusDays(1)
-                return oneDayBefore.format(DateTimeFormatter.ofPattern("dd MMMM, yyyy", Locale.US))
-            } catch (e: Exception) {
-                return null // Handle parsing errors if necessary
-            }
+        fun addDate(date: String): String {
+            val dateAsDate =
+                LocalDate.parse(date, DateTimeFormatter.ofPattern("dd MMMM, yyyy", Locale.US))
+            val oneDayBefore = dateAsDate.plusDays(1)
+            return oneDayBefore.format(DateTimeFormatter.ofPattern("dd MMMM, yyyy", Locale.US))
+
         }
 
         fun formatDate(date: LocalDate): String {
@@ -92,6 +99,12 @@ class ConvertDate {
             val outputFormat = SimpleDateFormat("MMMM", Locale.getDefault())
 
             return outputFormat.format(date)
+        }
+
+        fun dateToCalendar(date: Date): Calendar {
+            val calendar = Calendar.getInstance()
+            calendar.time = date
+            return calendar
         }
 
     }
