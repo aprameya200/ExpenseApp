@@ -1,8 +1,6 @@
-package com.example.expenseapp.ui.Fragments
+package com.example.expenseapp.ui.Fragments.Dialogs
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.example.expenseapp.AccountsAdapter
 import com.example.expenseapp.Entity.Transactions
@@ -28,7 +25,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.text.SimpleDateFormat
-import java.util.Date
 
 
 class AddTransactionFragment : BottomSheetDialogFragment() {

@@ -1,4 +1,4 @@
-package com.example.expenseapp.ui.Fragments
+package com.example.expenseapp.ui.Fragments.Dialogs
 
 import android.os.Bundle
 import android.util.Log

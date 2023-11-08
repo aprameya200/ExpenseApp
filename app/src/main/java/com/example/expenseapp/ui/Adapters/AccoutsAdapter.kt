@@ -5,15 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.AdapterView
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.expenseapp.Entity.UserAccounts
-import com.example.expenseapp.ui.Fragments.SelectAccountFragment
 
 class AccountsAdapter(val context: Context, val listItem: List<UserAccounts>) :
     RecyclerView.Adapter<AccountsAdapter.AccountsHolder>() {

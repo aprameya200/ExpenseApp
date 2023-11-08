@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.expenseapp.R
@@ -18,9 +18,11 @@ import com.example.expenseapp.helpers.Calculate
 import com.example.expenseapp.helpers.ConvertDate
 import com.example.expenseapp.ui.Adapters.ShowEmptyAdapter
 import com.example.expenseapp.ui.Adapters.TransactionsAdapter
-import com.example.expenseapp.ui.Fragments.AddTransactionFragment
+import com.example.expenseapp.ui.Fragments.Dialogs.AddTransactionFragment
+import com.example.expenseapp.ui.Fragments.Dialogs.ChartsFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Calendar
 
@@ -32,7 +34,6 @@ import java.util.Calendar
  *
  * REMAINING
  *
- * Month picker on date click
  */
 
 class MainActivity : AppCompatActivity() {
@@ -42,11 +43,15 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModel: TransactionViewModel
 
     private val auth = FirebaseAuth.getInstance()
-    lateinit var previousDate: String
+
+    var previousDate: String = ""
+    lateinit var previousMonth: String
 
     lateinit var tabs: TabLayout
 
     var showCalander = false
+
+//    lateinit var navController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,9 +65,17 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = TransactionViewModel(application)
 
+
         initUI()
 
+
+//        navController = findNavController(R.id.fragmentContainerView)
+//        setupActionBarWithNavController(
+//            navController
+//        )
+
     }
+
 
     fun initUI() {
         var addTransactionSheet = AddTransactionFragment()
@@ -82,6 +95,7 @@ class MainActivity : AppCompatActivity() {
             binding.mainDate,
             monthly.view,
             daily.view,
+            summary.view
         )
 
         allButtons.forEach { button ->
@@ -94,6 +108,7 @@ class MainActivity : AppCompatActivity() {
                     monthly.view -> pressMonthlyTab()
                     daily.view -> pressDailyTab()
                     binding.mainDate -> showCalender()
+                    summary.view -> showSummary()
                 }
             }
         }
@@ -102,6 +117,54 @@ class MainActivity : AppCompatActivity() {
         transactionsRecycler.layoutManager = GridLayoutManager(this, 1)
 
         showTransactions()
+//
+        val charts = ChartsFragment()
+//
+//        binding.recyclerView
+
+        binding.bottomNavigationView.setOnItemSelectedListener {
+            when (it.itemId) {
+
+                R.id.charts -> replaceFragment(binding.fragmentContainer,charts)
+                R.id.transaction -> removeFragmentByTag(charts)
+                else -> {replaceFragment(binding.fragmentContainer,charts)}
+            }
+        }
+
+    }
+
+    fun removeFragmentByTag(chart: ChartsFragment): Boolean {
+        val fragmentManager = supportFragmentManager // Use getSupportFragmentManager() if in an Activity
+
+        // Find the fragment by its tag
+
+        // Check if the fragment exists before attempting to remove it
+        if (chart != null) {
+            val transaction = fragmentManager.beginTransaction()
+
+            // Remove the fragment
+            transaction.remove(chart)
+
+            // Commit the transaction
+            transaction.commit()
+        }
+
+        return  true
+    }
+
+    fun replaceFragment(view: View, fragment: Fragment): Boolean{
+        val transaction = supportFragmentManager.beginTransaction()
+
+        // Replace the existing view with the fragment
+        transaction.replace(view.id, fragment)
+
+        // Optionally, add the transaction to the back stack (for navigation)
+        transaction.addToBackStack(null)
+
+        // Commit the transaction
+        transaction.commit()
+
+        return true
     }
 
     fun showCalender() {
@@ -117,6 +180,10 @@ class MainActivity : AppCompatActivity() {
                 myCalander.set(Calendar.YEAR, year)
                 myCalander.set(Calendar.MONTH, month)
                 myCalander.set(Calendar.DAY_OF_MONTH, day)
+
+                binding.mainDate.text =
+                    SimpleDateFormat("dd MMMM, yyyy").format(myCalander.time).toString()
+                viewModel.filterDate(binding.mainDate.text.toString())
             }
 
             DatePickerDialog(
@@ -126,20 +193,60 @@ class MainActivity : AppCompatActivity() {
                 myCalander.get(Calendar.MONTH),
                 myCalander.get(Calendar.DAY_OF_MONTH)
             ).show()
+
+        }
+
+    }
+
+    fun toggleVisibility(turnOff: Boolean) {
+        val mainDateVisibility = if (turnOff) View.GONE else View.VISIBLE
+        val forwardButtonVisibility = mainDateVisibility
+        val backButtonVisibility = mainDateVisibility
+        val summaryTitleVisibility = if (turnOff) View.VISIBLE else View.GONE
+
+        binding.mainDate.visibility = mainDateVisibility
+        binding.forwardButton.visibility = forwardButtonVisibility
+        binding.backButton.visibility = backButtonVisibility
+        binding.summaryTitle.visibility = summaryTitleVisibility
+    }
+
+    fun showSummary() {
+        Log.d("Date Prev", previousDate)
+        Log.d("Date Binding", binding.mainDate.text.toString())
+        if (previousDate.length > 10 && binding.mainDate.text.toString().length > 10) previousDate =
+            ""
+
+        toggleVisibility(true)
+        viewModel.showAllTransactions()
+    }
+
+    fun pressDailyTab() {
+        toggleVisibility(false)
+        if (tabs.selectedTabPosition != 0) {
+            if (previousDate.isEmpty()) previousDate = binding.mainDate.text.toString()
+
+            //send old value to method
+            viewModel.filterAccordingly(previousDate)
+            binding.mainDate.text = previousDate
         }
     }
 
-
-    fun pressDailyTab() {
-        viewModel.filterDate(previousDate)
-        binding.mainDate.text = previousDate
-    }
-
     fun pressMonthlyTab() {
+        toggleVisibility(false)
         if (tabs.selectedTabPosition != 1) {
-            previousDate = binding.mainDate.text.toString()
-            binding.mainDate.text = ConvertDate.getMonthName(binding.mainDate.text.toString())
-            viewModel.filterMonth(ConvertDate.getShortMonthFromMonth(binding.mainDate.text.toString()))
+
+            if (binding.mainDate.text.toString().length > 10) previousDate =
+                binding.mainDate.text.toString()
+
+//            previousDate = binding.mainDate.text.toString()
+            previousMonth = binding.mainDate.text.toString()
+            if (binding.mainDate.text.toString().length > 10) {
+                binding.mainDate.text = ConvertDate.getMonthName(binding.mainDate.text.toString())
+                viewModel.filterMonth(ConvertDate.getShortMonthFromMonth(binding.mainDate.text.toString()))
+            } else {
+                viewModel.filterMonth(ConvertDate.getShortMonthFromMonth(binding.mainDate.text.toString()))
+            }
+
         }
     }
 
@@ -177,21 +284,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showTransactions() {
-
-        viewModel.allTransactions.observe(this) {
-            it?.let {
-                if (!it.isEmpty()){
-                    Log.d("String List", it.toString())
-                    transactionsRecycler.adapter = TransactionsAdapter(this, it)
-                    binding.incomeValue.text = Calculate.calculateTotal(it).income.toString()
-                    binding.expenseValue.text = Calculate.calculateTotal(it).expense.toString()
-                    binding.totalValue.text = Calculate.calculateTotal(it).total.toString()
-                }else{
-                    transactionsRecycler.adapter = ShowEmptyAdapter(this)
-                    binding.incomeValue.text = "0"
-                    binding.expenseValue.text = "0"
-                    binding.totalValue.text = "0"
-                }
+        viewModel.allTransactions.observe(this) { transactions ->
+            transactions?.let { transactionList ->
+                val isEmpty = transactionList.isEmpty()
+                transactionsRecycler.adapter =
+                    if (isEmpty) ShowEmptyAdapter(this) else TransactionsAdapter(
+                        this,
+                        transactionList
+                    )
+                val total = Calculate.calculateTotal(transactionList)
+                binding.incomeValue.text = total.income.toString()
+                binding.expenseValue.text = total.expense.toString()
+                binding.totalValue.text = total.total.toString()
             }
         }
     }

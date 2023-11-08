@@ -71,6 +71,12 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         _transactionAdded.value = repository.addTransaction(transaction)
     }
 
+    /**
+     * Takes date as string (dd MMMM, YYYY), converts it to date and compares with
+     * the list of all transactions before getting it
+     *
+     * @param date
+     */
     fun filterDate(date: String){
 
         var allTransaction = _transactionsStore.value!!
@@ -84,6 +90,16 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         _allTransactions.value = filteredDate //new vLUES ARE ADDED TO THIS LIST SO OTHER WONT GET UPDATED
     }
 
+    fun showAllTransactions(){
+        var allTransaction = _transactionsStore.value!!
+        var filteredDate = mutableListOf<Transactions>()
+
+        for (transaction in allTransaction){
+                filteredDate.add(transaction)
+        }
+        _allTransactions.value = filteredDate.sortedBy { it.date } //new vLUES ARE ADDED TO THIS LIST SO OTHER WONT GET UPDATED
+    }
+
     fun filterMonth(month: String){
 
         var allTransaction = _transactionsStore.value!!
@@ -92,7 +108,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         for (transaction in allTransaction){
             if (transaction.date.toString().contains(month)) filteredDate.add(transaction)
         }
-        _allTransactions.value = filteredDate //new vLUES ARE ADDED TO THIS LIST SO OTHER WONT GET UPDATED
+        _allTransactions.value = filteredDate.sortedBy { it.date } //new vLUES ARE ADDED TO THIS LIST SO OTHER WONT GET UPDATED
     }
 
     fun filterAccordingly(string: String){
