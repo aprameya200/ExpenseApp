@@ -1,10 +1,5 @@
 package com.example.expenseapp.ui.Adapters
 
-import android.content.Context
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,27 +7,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.expenseapp.Entity.Transactions
 import com.example.expenseapp.R
 import com.example.expenseapp.enums.Category
 import com.example.expenseapp.enums.TransactionType
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
-class TransactionsAdapter(val context: Context, val transactionlist: List<Transactions>) :
-    RecyclerView.Adapter<TransactionsAdapter.TransactionHolder>() {
-
-//    List Adapter -> updates list without remaking new list
-//    Groupie -> used to remove boilerplate code and more flexibility to recycler view and adapter
-//    Object Box -> simple database solution . saves objects as data
-//    View Pager -> easy way to show tabs and navigate between them
-//    Image Slider
-
-    class TransactionHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//Create instance of TransactionDiffCallback as constructor in this class
+class TransactionListAdapter : ListAdapter<Transactions, TransactionListAdapter.TransactionViewHolder>(TransactionDiffCallback()) {
+    class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val logo: ImageView = itemView.findViewById(R.id.transactionLogo)
         val title: TextView = itemView.findViewById(R.id.transactionTitle)
         val tag: TextView = itemView.findViewById(R.id.tag)
@@ -41,53 +28,50 @@ class TransactionsAdapter(val context: Context, val transactionlist: List<Transa
         val arrow: ImageView = itemView.findViewById(R.id.typeArrow)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
+
         val view = LayoutInflater.from(parent.context).inflate(R.layout.transactions, parent, false)
-
-        return TransactionHolder(view)
+        return TransactionViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return transactionlist.size
-    }
+    override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
+        val item = getItem(position)
+        holder.logo.setImageResource(setImageBasedOnCategory(item.category))
 
+        holder.logo.backgroundTintList = holder.itemView.context?.let {
+            ContextCompat.getColorStateList(
+                it,
+                setColorBasedOnExpenseIncome(item.type)
+            )
+        }
 
-    override fun onBindViewHolder(holder: TransactionHolder, position: Int) {
-
-        //logo image and color
-        holder.logo.setImageResource(setImageBasedOnCategory(transactionlist[position].category))
-        holder.logo.backgroundTintList =
-            context?.let {
-                ContextCompat.getColorStateList(
-                    it,
-                    setColorBasedOnExpenseIncome(transactionlist[position].type)
-                )
-            }
-
-        holder.title.text = transactionlist[position].title
-        holder.tag.text = Category.getCategoryName(transactionlist[position].category)
+        holder.title.text = item.title
+        holder.tag.text = Category.getCategoryName(item.category)
         holder.tag.backgroundTintList =
-            context?.let {
+            holder.itemView.context?.let {
                 ContextCompat.getColorStateList(
                     it,
-                    setColotBasedOnTag(transactionlist[position].category)
+                    setColotBasedOnTag(item.category)
                 )
             }
 
-        holder.date.text = formatDate(transactionlist[position].date)
+        holder.date.text = formatDate(item.date)
 
 
         //amount color
-        holder.amount.text = transactionlist[position].amount.toString()
+        holder.amount.text = item.amount.toString()
         holder.amount.setTextColor(
             ContextCompat.getColor(
-                context,
-                setColorBasedOnExpenseIncome(transactionlist[position].type)
+                holder.itemView.context,
+                setColorBasedOnExpenseIncome(item.type)
             )
         )
 
-        holder.arrow.setImageResource(setArrowImage(transactionlist[position].type))
+        holder.arrow.setImageResource(setArrowImage(item.type))
 
+        if (item.amount.toString() == ""){
+            Log.d("Empty", "Empty")
+        }
 
 
     }
@@ -134,5 +118,4 @@ class TransactionsAdapter(val context: Context, val transactionlist: List<Transa
         val dateFormat = SimpleDateFormat("dd MMMM, yyyy", Locale.getDefault())
         return dateFormat.format(date)
     }
-
 }

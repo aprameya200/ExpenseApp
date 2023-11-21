@@ -1,5 +1,6 @@
 package com.example.expenseapp.ui.Activities
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
@@ -17,6 +18,7 @@ import com.example.expenseapp.databinding.ActivityMainBinding
 import com.example.expenseapp.helpers.Calculate
 import com.example.expenseapp.helpers.ConvertDate
 import com.example.expenseapp.ui.Adapters.ShowEmptyAdapter
+import com.example.expenseapp.ui.Adapters.TransactionListAdapter
 import com.example.expenseapp.ui.Adapters.TransactionsAdapter
 import com.example.expenseapp.ui.Fragments.Dialogs.AddTransactionFragment
 import com.example.expenseapp.ui.Fragments.Dialogs.ChartsFragment
@@ -29,6 +31,8 @@ import java.util.Calendar
 /**
  * BUGS
  *
+ *
+ * List adapter wont load valid date
  * Year sakepachi new months ko dehkhaunu parchs, but not it shows of the previous year months also (not yesr specific)
  *
  *
@@ -51,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
     var showCalander = false
 
-//    lateinit var navController: NavController
+    var listAdapter = TransactionListAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,14 +69,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = TransactionViewModel(application)
 
-
         initUI()
-
-
-//        navController = findNavController(R.id.fragmentContainerView)
-//        setupActionBarWithNavController(
-//            navController
-//        )
 
     }
 
@@ -116,52 +113,60 @@ class MainActivity : AppCompatActivity() {
         transactionsRecycler = binding.recyclerView
         transactionsRecycler.layoutManager = GridLayoutManager(this, 1)
 
+        transactionsRecycler.adapter = listAdapter
+
         showTransactions()
-//
-        val charts = ChartsFragment()
-//
-//        binding.recyclerView
+        navigationListeners()
 
-        binding.bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId) {
+    }
 
-                R.id.charts -> replaceFragment(binding.fragmentContainer,charts)
-                R.id.transaction -> removeFragmentByTag(charts)
-                else -> {replaceFragment(binding.fragmentContainer,charts)}
+    @SuppressLint("SuspiciousIndentation")
+    fun showTransactions() {
+
+        viewModel.allTransactions.observe(this) { transactions ->
+            transactions?.let { transactionList ->
+                val isEmpty = transactionList.isEmpty()
+                if (!isEmpty){
+                    transactionsRecycler.adapter = listAdapter
+                    listAdapter.submitList(transactionList)
+                }
+                else {
+                    transactionsRecycler.adapter = ShowEmptyAdapter(this)
+                }
+                val total = Calculate.calculateTotal(transactionList)
+                binding.incomeValue.text = total.income.toString()
+                binding.expenseValue.text = total.expense.toString()
+                binding.totalValue.text = total.total.toString()
             }
         }
-
     }
 
-    fun removeFragmentByTag(chart: ChartsFragment): Boolean {
-        val fragmentManager = supportFragmentManager // Use getSupportFragmentManager() if in an Activity
+    fun navigationListeners() {
 
-        // Find the fragment by its tag
-
-        // Check if the fragment exists before attempting to remove it
-        if (chart != null) {
-            val transaction = fragmentManager.beginTransaction()
-
-            // Remove the fragment
-            transaction.remove(chart)
-
-            // Commit the transaction
-            transaction.commit()
+        val charts = ChartsFragment()
+        val fragment = binding.fragmentContainer
+        binding.bottomNavigationView.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.charts -> addOrRemoveFragment(fragment, charts, true)
+                R.id.transaction -> addOrRemoveFragment(fragment, charts, false)
+                else -> {
+                    addOrRemoveFragment(fragment, charts, false)
+                }
+            }
         }
-
-        return  true
     }
 
-    fun replaceFragment(view: View, fragment: Fragment): Boolean{
+    fun addOrRemoveFragment(view: View, fragment: Fragment, add: Boolean): Boolean {
         val transaction = supportFragmentManager.beginTransaction()
-
-        // Replace the existing view with the fragment
-        transaction.replace(view.id, fragment)
-
-        // Optionally, add the transaction to the back stack (for navigation)
-        transaction.addToBackStack(null)
-
-        // Commit the transaction
+        if (add) {
+            transaction.replace(view.id, fragment)
+            transaction.addToBackStack(null)
+            binding.incomeExpense.visibility = View.GONE
+            binding.addTransaction.visibility = View.GONE
+        } else {
+            transaction.remove(fragment)
+            binding.incomeExpense.visibility = View.VISIBLE
+        }
         transaction.commit()
 
         return true
@@ -211,11 +216,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showSummary() {
-        Log.d("Date Prev", previousDate)
-        Log.d("Date Binding", binding.mainDate.text.toString())
+
         if (previousDate.length > 10 && binding.mainDate.text.toString().length > 10) previousDate =
             ""
-
         toggleVisibility(true)
         viewModel.showAllTransactions()
     }
@@ -283,22 +286,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainDate.text = datePlusOne!!
     }
 
-    fun showTransactions() {
-        viewModel.allTransactions.observe(this) { transactions ->
-            transactions?.let { transactionList ->
-                val isEmpty = transactionList.isEmpty()
-                transactionsRecycler.adapter =
-                    if (isEmpty) ShowEmptyAdapter(this) else TransactionsAdapter(
-                        this,
-                        transactionList
-                    )
-                val total = Calculate.calculateTotal(transactionList)
-                binding.incomeValue.text = total.income.toString()
-                binding.expenseValue.text = total.expense.toString()
-                binding.totalValue.text = total.total.toString()
-            }
-        }
-    }
+
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
